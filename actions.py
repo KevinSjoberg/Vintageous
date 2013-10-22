@@ -1085,10 +1085,13 @@ class _vi_dd_action(sublime_plugin.TextCommand):
             # Do nothing unless in _MODE_INTERNAL_NORMAL.
             if mode != _MODE_INTERNAL_NORMAL: return s
 
-            # We've made a selection `s` with `_vi_dd_motion`.
+            # We've made a selection `s` with `_vi_dd_motion`. Find
+            # intersecting lines so we know where to position the cursor after
+            # erasing the current selection `s`.
+            intersecting_lines = view.lines(s)
             view.erase(edit, s)
 
-            pt = utils.next_non_white_space_char(view, s.a, white_space=' \t')
+            pt = utils.next_non_white_space_char(view, intersecting_lines[0].a, white_space=' \t')
             return sublime.Region(pt, pt)
 
         regions_transformer(self.view, f)

@@ -1364,7 +1364,7 @@ class _vi_dd_motion(sublime_plugin.TextCommand):
             target_line = view.text_point(view.rowcol(s.b)[0] + count - 1, 0)
             region = sublime.Region(view.full_line(s.b).a, view.full_line(target_line).b)
 
-            if region == view.full_line(view.size()):
+            if region.intersects(view.full_line(view.size())):
                 region.a -= 1
 
             return region
