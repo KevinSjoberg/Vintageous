@@ -1082,12 +1082,14 @@ class _vi_int_reindent(sublime_plugin.TextCommand):
 class _vi_dd_action(sublime_plugin.TextCommand):
     def run(self, edit, mode=None):
         def f(view, s):
-            # We've made a selection with _vi_cc_motion just before this.
-            if mode == _MODE_INTERNAL_NORMAL:
-                view.erase(edit, s)
-                pt = utils.next_non_white_space_char(view, s.a, white_space=' \t')
-                return sublime.Region(pt, pt)
-            return s
+            # Do nothing unless in _MODE_INTERNAL_NORMAL.
+            if mode != _MODE_INTERNAL_NORMAL: return s
+
+            # We've made a selection `s` with `_vi_dd_motion`.
+            view.erase(edit, s)
+
+            pt = utils.next_non_white_space_char(view, s.a, white_space=' \t')
+            return sublime.Region(pt, pt)
 
         regions_transformer(self.view, f)
 
